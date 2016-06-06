@@ -5,7 +5,7 @@
 #include "ioI.hpp"
 #include <string>
 #include <iostream>
-
+#include <istream>
 
 namespace cms {
 
@@ -14,7 +14,7 @@ namespace cms {
     public:
       std::string getMessage(){
         std::string ret = "";
-        std::cin >> ret;
+        std::getline(std::cin, ret);
         return ret;
       }
 

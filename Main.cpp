@@ -23,20 +23,20 @@ int main(int argc, char** argv){
 
   //Initialize the communication layer of choice
   ioI * commLayer = new cli(); 
-  string line = "", type = "", command = "";
+  string line = "", type = "";
   while((line = commLayer->getMessage()) != "e"){
-    command = string(line);
+
     type = identifyCommandType(line);
 
     Command * comm;
     //Identify the command type and create an instance of it
     if(type == "POST"){
-      comm = new Post(command);
+      comm = new Post(line);
     }else if(type == "other commands here"){
 
     }else{
       cout << "Unrecognized command: " << endl;
-      cout << command << endl;
+      cout << line << endl;
       cout << "Please try again." << endl;
     }
 
