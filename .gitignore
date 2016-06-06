@@ -2,3 +2,6 @@
 *.tmp
 *.gch
 *.DS_Store
+*.o
+cms
+
