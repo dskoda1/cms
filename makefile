@@ -7,8 +7,10 @@ all: Main
 Main: Main.o
 		$(CXX) $(CXXFLAGS) -o cms Main.o
 
-Main.o: Main.cpp 
+Main.o: Main.cpp ${HEADERS}
 		$(CXX) $(CXXFLAGS) -c Main.cpp
 		  
+HEADERS: commands/*.hpp io/*.hpp
+
 clean: 
 		rm -rf *.o *.gch cms

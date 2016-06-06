@@ -2,6 +2,12 @@
 #define COMMAND_HPP
 
 
+#include <string>
+#include <vector>
+#include <sstream>
+#include <iostream>
+
+
 namespace cms{
 
 
@@ -28,10 +34,44 @@ namespace cms{
    * 5. List orders
    */  
    class Command{
-  
       public:
-        Command(std::string cIn) : command{cIn} {}
+        Command(std::string cIn) : command{cIn} {
+          parseCommand();
+        }
+        ~Command(){
+          delete splitCommand;
+        }
 
+
+        
+        /**
+         * Split the command based on whitespace
+         * and store the words in a vector data member.
+         */
+        void parseCommand(){
+          splitCommand = new std::vector<std::string>();
+          //Generate an string stream and iterate through it
+          std::stringstream ss(command);
+          std::string temp;
+          while(ss >> temp){
+            splitCommand->push_back(temp);
+          }
+          //Save a couple things we know about the command
+          //to be true for all commands
+          dealerId = splitCommand->at(0);
+          commandType = splitCommand->at(1);
+        }
+
+        virtual bool validate() = 0;
+
+                
+
+        //const getters
+        std::string getCommandType() const { return commandType; }
+        std::string getDealerId() const { return dealerId; }
+        int getOrderId() const { return orderId; }
+        std::string getCommodity() const { return commodity; }
+        std::string getSide() const { return side; }
       protected:
         bool validateSide(std::string side){
           bool ret = false;
@@ -50,7 +90,17 @@ namespace cms{
           return ret;
 
         }
+        
+        /*Data members*/
         std::string command;
+        std::vector<std::string> * splitCommand;
+        std::string commandType; 
+        std::string dealerId;
+        int orderId;
+        std::string commodity;
+        std::string side;
+       
+
 
       private:
 
