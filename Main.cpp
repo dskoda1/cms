@@ -1,5 +1,5 @@
 //Library includes
-
+#include <vector>
 
 
 //Header file includes
@@ -8,6 +8,9 @@
 
 #include "commands/Command.hpp"
 #include "commands/Post.hpp"
+
+#include "market/Market.hpp"
+
 //Namespaces
 using namespace cms;
 using namespace std;
@@ -15,6 +18,18 @@ using namespace std;
 //Function stubs
 void displayCmsMenu();
 string identifyCommandType(string cIn);
+
+void memoryTest(){
+  vector<Command *> comms;
+  for(int i = 0; i < 10000; ++i){
+    comms.push_back(new Post("Testing memory"));
+  }
+
+
+  for(int i = 0; i < 10000; ++i){
+    delete comms.at(i);
+  }
+}
 
 int main(int argc, char** argv){
   cout << "Welcome to the Commodity Market System! (CMS)" << endl;
@@ -24,14 +39,20 @@ int main(int argc, char** argv){
   //Initialize the communication layer of choice
   ioI * commLayer = new cli(); 
   string line = "", type = "";
+
+  //And the market
+  Market * m = new Market();
   while((line = commLayer->getMessage()) != "e"){
-
-    type = identifyCommandType(line);
-
-    Command * comm;
+    Command * command;
+    Post * post;
     //Identify the command type and create an instance of it
+    type = identifyCommandType(line);
     if(type == "POST"){
-      comm = new Post(line);
+      m->addOrder(new Post(line));
+    }else if(type == "LIST"){
+      
+    
+    
     }else if(type == "other commands here"){
 
     }else{
@@ -42,6 +63,7 @@ int main(int argc, char** argv){
 
   }
 
+  delete m;
 }
 
 void displayCmsMenu(){

@@ -7,12 +7,11 @@ namespace cms {
 
   class Post : public Command {
     public:
-      Post(std::string cIn) : Command{cIn} {}
 
+      Post(std::string cIn) : Command{cIn} {}
+      
 
       bool validate(){
-        
-
         return true;
       }
 
