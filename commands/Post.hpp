@@ -26,6 +26,11 @@ namespace cms {
       //Validate the things specific to a post
       //POST {SIDE} {COMMODITY} {AMOUNT} {PRICE}
       bool validate(){
+        //Ensure length first
+        if(splitCommand->size() != 5){
+          throw ParseException("INVALID MESSAGE\n");
+        }
+
         side = splitCommand->at(2);
         if(!validateSide(side)){
           throw ParseException(generateError("side", side));

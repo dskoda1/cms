@@ -9,6 +9,7 @@
 
 #include "commands/Command.hpp"
 #include "commands/Post.hpp"
+#include "commands/List.hpp"
 
 #include "market/Market.hpp"
 
@@ -42,17 +43,17 @@ int main(int argc, char** argv){
   while((line = commLayer->getMessage()) != "e"){
 
     Command * command;
-    Post * post;
+    //Post * post;
 
     //Identify the command type and create an instance of it
     type = identifyCommandType(line);
     try{
       if(type == "POST"){
-        post = new Post(line);
-        post->validate();
-        m->addOrder(post);
+        command = new Post(line);
+        command->validate();
+        m->addOrder(dynamic_cast<Post *>(command));
       }else if(type == "LIST"){
-
+        command = new List(line);
 
 
       }else if(type == "other commands here"){
