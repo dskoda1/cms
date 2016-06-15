@@ -82,7 +82,8 @@ namespace cms{
       int getOrderId() const { return orderId; }
       std::string getCommodity() const { return commodity; }
       std::string getSide() const { return side; }
-
+      int getAmount() const { return amount; }
+      double getPrice() const { return price; }
 
     protected:
       //Helper error message generator
@@ -136,12 +137,14 @@ namespace cms{
       /*Data members*/
       std::string command;
       std::vector<std::string> * splitCommand;
+      
+      int orderId;
       std::string commandType; 
       std::string dealerId;
-      int orderId;
       std::string commodity;
       std::string side;
-
+      int amount;
+      double price;
 
 
     private:

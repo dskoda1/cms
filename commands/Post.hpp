@@ -27,7 +27,7 @@ namespace cms {
       //POST {SIDE} {COMMODITY} {AMOUNT} {PRICE}
       bool validate(){
         //Ensure length first
-        if(splitCommand->size() != 5){
+        if(splitCommand->size() != 6){
           throw ParseException("INVALID MESSAGE\n");
         }
 
@@ -41,7 +41,13 @@ namespace cms {
           throw ParseException(generateError("commodity", commodity));
         }
 
+        amount = atoi(splitCommand->at(4).c_str());
+        price = std::stod(splitCommand->at(5).c_str());
         return true;
+      }
+
+      void setOrderId(int id){
+        orderId = id;
       }
 
       //Output operator for debugging 

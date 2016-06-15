@@ -3,6 +3,7 @@
 
 #include "../commands/Command.hpp"
 #include "../commands/Post.hpp"
+#include "../commands/List.hpp"
 
 #include "../util/Grammar.hpp"
 
@@ -11,7 +12,7 @@
 #include <map>
 
 #include <iostream>
-
+#include <sstream>
 namespace cms {
 
 
@@ -36,24 +37,80 @@ namespace cms {
           //Loop through items in the vector in this pair
           for(auto j = i->second->begin(); j != i->second->end(); ++j){
             //delete post in vector
-            std::cout << "Deleting a post" << std::endl;
             delete *j;
           }
-          std::cout << "deleting a vector" << std::endl;
           //delete vector
           delete (i->second);
         }
-        std::cout << "Deleting the map" << std::endl;
         //delete map
         delete orders;
 
       }
-      void addOrder(Post * order){
+
+      /**
+       * Ingestion methods for different types of commands
+       */
+      std::string ingestOrder(Post * order){
         //insert into the correct vector based on orders commodity
         (*orders)[order->getCommodity()]->push_back(order);
+        order->setOrderId(orderNumber++);
+        return generateOrderInfo(order);
       }
 
+      /**
+       * Ingestion of a list order
+       * depending on the listStatus of the order,
+       * generate the list of orders requested.
+       */
+      std::string ingestOrder(List * order){
+        std::vector<Post *> ordersToPrint;
+
+        if(order->getListStatus() == 0){
+          //Get all posts
+          for(auto i = orders->begin(); i != orders->end(); ++i){
+            for(auto j = i->second->begin(); j != i->second->end(); ++j){
+              ordersToPrint.push_back(*j);
+            }
+          }
+        }else if(order->getListStatus() == 1){
+          //Get just posts from the commodity requested
+          std::vector<Post *> * commodOrders = (*orders)[order->getCommodity()];
+          for(auto i = commodOrders->begin(); i != commodOrders->end(); ++i){
+            ordersToPrint.push_back(*i);
+          }
+        }else{
+          //Get posts from a specific commodity and dealer
+          std::vector<Post *> * commodOrders = (*orders)[order->getCommodity()];
+          for(auto i = commodOrders->begin(); i != commodOrders->end(); ++i){
+            if((*i)->getDealerId() == order->getDealerId()){
+              ordersToPrint.push_back(*i);
+            }
+          }
+        }  
+
+        //generate the actual string using a ss now
+        std::stringstream ss;
+
+        for(auto it = ordersToPrint.begin(); it != ordersToPrint.end(); ++it){
+          ss << generateOrderInfo(*it);
+        }
+        ss << "END OF LIST";
+        return ss.str();
+      }
+
+
     private:
+      std::string generateOrderInfo(Post * order){
+        std::stringstream ss;
+        ss << order ->getOrderId() << " ";
+        ss << order->getDealerId() << " ";
+        ss <<order->getSide() << " ";
+        ss << order->getCommodity() << " ";
+        ss << order->getAmount() << " ";
+        ss << order->getPrice() << "\n";
+        return ss.str();
+      }
+
       //std::vector<Post *> * orders;
       std::map<std::string, std::vector<Post *> * > * orders;
       int orderNumber;

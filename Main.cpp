@@ -25,10 +25,12 @@ string identifyCommandType(string &cIn);
 int main(int argc, char** argv){
 
   //Initialize the communication layer of choice
-  //ioI * commLayer = new cli(); 
-  //for testing
-  ioI * commLayer = new FileReader("test/testPost.txt");
-
+  ioI * commLayer;
+  if(argc == 0){
+    commLayer = new cli();
+  }else{
+    commLayer = new FileReader("test/testPost.txt");
+  }
 
   commLayer->sendMessage("Welcome to the Commodity Market System! (CMS)\n");
   commLayer->sendMessage("Ctrl + c, or simply \"e\" to exit.\n");
@@ -41,9 +43,8 @@ int main(int argc, char** argv){
 
   //Loop to receive commands in
   while((line = commLayer->getMessage()) != "e"){
-
+    commLayer->sendMessage(line + "\n");
     Command * command;
-    //Post * post;
 
     //Identify the command type and create an instance of it
     type = identifyCommandType(line);
@@ -51,10 +52,11 @@ int main(int argc, char** argv){
       if(type == "POST"){
         command = new Post(line);
         command->validate();
-        m->addOrder(dynamic_cast<Post *>(command));
+        commLayer->sendMessage(m->ingestOrder(dynamic_cast<Post *>(command)));
       }else if(type == "LIST"){
         command = new List(line);
-
+        command->validate();
+        commLayer->sendMessage(m->ingestOrder(dynamic_cast<List *>(command)));       
 
       }else if(type == "other commands here"){
 
@@ -67,7 +69,7 @@ int main(int argc, char** argv){
       commLayer->sendMessage(pe.what());
     }
 
-    
+    commLayer->sendMessage("\n");    
   }
   //cleanup
   delete commLayer;
