@@ -50,12 +50,6 @@ namespace cms {
         orderId = id;
       }
 
-      //Output operator for debugging 
-      friend std::ostream & operator << (std::ostream & os, const Command & c){
-        os << "Command type: " << c.getCommandType() << "\n";
-        os << "Dealer ID: " << c.getDealerId() << "\n";
-        return os;
-      }
 
   };
 }

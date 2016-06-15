@@ -54,7 +54,7 @@ namespace cms {
         //insert into the correct vector based on orders commodity
         (*orders)[order->getCommodity()]->push_back(order);
         order->setOrderId(orderNumber++);
-        return generateOrderInfo(order);
+        return generateOrderInfo(order, " HAS BEEN POSTED") ;
       }
 
       /**
@@ -92,7 +92,7 @@ namespace cms {
         std::stringstream ss;
 
         for(auto it = ordersToPrint.begin(); it != ordersToPrint.end(); ++it){
-          ss << generateOrderInfo(*it);
+          ss << generateOrderInfo(*it, "\n");
         }
         ss << "END OF LIST";
         return ss.str();
@@ -100,14 +100,14 @@ namespace cms {
 
 
     private:
-      std::string generateOrderInfo(Post * order){
+      std::string generateOrderInfo(Post * order, std::string optDelimit = ""){
         std::stringstream ss;
-        ss << order ->getOrderId() << " ";
+        ss << order->getOrderId() << " ";
         ss << order->getDealerId() << " ";
-        ss <<order->getSide() << " ";
+        ss << order->getSide() << " ";
         ss << order->getCommodity() << " ";
         ss << order->getAmount() << " ";
-        ss << order->getPrice() << "\n";
+        ss << order->getPrice() << optDelimit;
         return ss.str();
       }
 
