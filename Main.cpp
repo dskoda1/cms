@@ -5,6 +5,7 @@
 //Header file includes
 #include "io/ioI.hpp"
 #include "io/cli.hpp"
+#include "io/FileReader.hpp"
 
 #include "commands/Command.hpp"
 #include "commands/Post.hpp"
@@ -17,50 +18,66 @@ using namespace std;
 
 //Function stubs
 void displayCmsMenu();
-string identifyCommandType(string cIn);
+string identifyCommandType(string &cIn);
 
 
 int main(int argc, char** argv){
-  cout << "Welcome to the Commodity Market System! (CMS)" << endl;
-  cout << "Ctrl + c, or simply \"e\" to exit." << endl;
-  cout << "Please begin issuing commands. " << endl;
 
   //Initialize the communication layer of choice
-  ioI * commLayer = new cli(); 
+  //ioI * commLayer = new cli(); 
+  //for testing
+  ioI * commLayer = new FileReader("test/testPost.txt");
+
+
+  commLayer->sendMessage("Welcome to the Commodity Market System! (CMS)\n");
+  commLayer->sendMessage("Ctrl + c, or simply \"e\" to exit.\n");
+  commLayer->sendMessage("Please begin issuing commands.\n");
   string line = "", type = "";
 
   //And the market
   Market * m = new Market();
+
+
+  //Loop to receive commands in
   while((line = commLayer->getMessage()) != "e"){
+
     Command * command;
     Post * post;
+
     //Identify the command type and create an instance of it
     type = identifyCommandType(line);
-    if(type == "POST"){
-      post = new Post(line);
-      post->validate();
-      m->addOrder(new Post(line));
-    }else if(type == "LIST"){
-      
-    
-    
-    }else if(type == "other commands here"){
+    try{
+      if(type == "POST"){
+        post = new Post(line);
+        post->validate();
+        m->addOrder(post);
+      }else if(type == "LIST"){
 
-    }else{
-      cout << "Unrecognized command: " << endl;
-      cout << line << endl;
-      cout << "Please try again." << endl;
+
+
+      }else if(type == "other commands here"){
+
+      }else{
+        commLayer->sendMessage("\t\nINVALID MESSAGE\n\n");
+
+      }
+    }catch(const ParseException& pe){
+
+      commLayer->sendMessage(pe.what());
     }
 
+    
   }
-
+  //cleanup
+  delete commLayer;
+  delete m;
 }
 
 void displayCmsMenu(){
 
 }
 
-string identifyCommandType(string cIn){
+string identifyCommandType(string & cIn){
   //Grab the second string in the arg
   stringstream ss(cIn);
   string temp;

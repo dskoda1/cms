@@ -27,7 +27,9 @@ namespace cms{
       /**
        * Send a message
        */
-      virtual void sendMessage(std::string) = 0;
+      virtual void sendMessage(const std::string) = 0;
+
+      virtual ~ioI(){}
     private:
 
   };

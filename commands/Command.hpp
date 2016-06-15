@@ -87,9 +87,10 @@ namespace cms{
     protected:
       //Helper error message generator
       std::string generateError(std::string part, std::string partVal){
-        return "Error validating " + part + " of: " + partVal + "\n" +
-          "Originated from command: \n\t" + command + "\n";
-
+        std::string ret = "\n\tERROR THROWN PARSING COMMAND\n";
+        ret += "\tError validating " + part + " of: " + partVal + "\n";
+        ret += "\tOriginated from command: \n\t" + command + "\n";
+        return ret;
       }
       /**
        * Validation methods to be used by derived classes

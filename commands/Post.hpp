@@ -18,7 +18,10 @@ namespace cms {
       std::string commodity;
       std::string side;*/
 
-      Post(std::string cIn) : Command{cIn} {}
+      Post(std::string & cIn) : Command{cIn} {}
+
+      virtual ~Post(){
+      }
 
       //Validate the things specific to a post
       //POST {SIDE} {COMMODITY} {AMOUNT} {PRICE}

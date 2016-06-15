@@ -15,14 +15,14 @@ namespace cms {
       std::string getMessage(){
         std::string ret = "";
         std::getline(std::cin, ret);
+        //std::getline(std::cin, &ret);
         return ret;
       }
 
-      void sendMessage(std::string s){
+      void sendMessage(const std::string s){
         std::cout << s;
-
       }
-
+      
 
     private:
 
