@@ -10,7 +10,7 @@ Main: Main.o
 Main.o: Main.cpp ${HEADERS}
 		$(CXX) $(CXXFLAGS) -c Main.cpp
 		  
-HEADERS: commands/*.hpp io/*.hpp market/Market.hpp
+HEADERS: commands/*.hpp io/*.hpp market/*.hpp util/*.hpp
 
 clean: 
 		rm -rf *.o *.gch cms

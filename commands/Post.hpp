@@ -2,16 +2,37 @@
 #define POST_HPP
 
 #include "Command.hpp"
-
+#include "../util/ParseException.hpp"
 namespace cms {
 
   class Post : public Command {
     public:
 
-      Post(std::string cIn) : Command{cIn} {}
-      
 
+      /*Data members
+      std::string command;
+      std::vector<std::string> * splitCommand;
+      std::string commandType;
+      std::string dealerId;
+      int orderId;
+      std::string commodity;
+      std::string side;*/
+
+      Post(std::string cIn) : Command{cIn} {}
+
+      //Validate the things specific to a post
+      //POST {SIDE} {COMMODITY} {AMOUNT} {PRICE}
       bool validate(){
+        side = splitCommand->at(2);
+        if(!validateSide(side)){
+          throw ParseException(generateError("side", side));
+        }
+        
+        commodity = splitCommand->at(3);
+        if(!validateCommodity(commodity)){
+          throw ParseException(generateError("commodity", commodity));
+        }
+
         return true;
       }
 

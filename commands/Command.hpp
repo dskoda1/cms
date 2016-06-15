@@ -7,7 +7,8 @@
 #include <sstream>
 #include <iostream>
 
-
+#include "../util/Grammar.hpp"
+#include "../util/ParseException.hpp"
 namespace cms{
 
 
@@ -33,76 +34,116 @@ namespace cms{
    *
    * 5. List orders
    */  
-   class Command{
-      public:
-        Command(std::string cIn) : command{cIn} {
-          parseCommand();
+  class Command{
+    public:
+      Command(std::string cIn) : command{cIn} {
+        parseCommand();
+      }
+      virtual ~Command(){
+        delete splitCommand;
+      }
+
+
+
+      /**
+       * Split the command based on whitespace
+       * and store the words in a vector data member.
+       */
+      void parseCommand(){
+        splitCommand = new std::vector<std::string>();
+        //Generate an string stream and iterate through it
+        std::stringstream ss(command);
+        std::string temp;
+        while(ss >> temp){
+          splitCommand->push_back(temp);
         }
-        virtual ~Command(){
-          delete splitCommand;
+        //Save a couple things we know about the command
+        //to be true for all commands
+
+        //Also validate the dealer id and the command type
+        dealerId = splitCommand->at(0);
+        if(!validateDealer(dealerId)){
+          throw ParseException(generateError("dealer", dealerId));
         }
 
+        commandType = splitCommand->at(1);
+        if(!validateCommand(commandType)){
+          throw ParseException(generateError("command type", commandType));
+        }
+      }
 
-        
-        /**
-         * Split the command based on whitespace
-         * and store the words in a vector data member.
-         */
-        void parseCommand(){
-          splitCommand = new std::vector<std::string>();
-          //Generate an string stream and iterate through it
-          std::stringstream ss(command);
-          std::string temp;
-          while(ss >> temp){
-            splitCommand->push_back(temp);
-          }
-          //Save a couple things we know about the command
-          //to be true for all commands
-          dealerId = splitCommand->at(0);
-          commandType = splitCommand->at(1);
+      virtual bool validate() = 0;
+
+
+
+      //const getters
+      std::string getCommandType() const { return commandType; }
+      std::string getDealerId() const { return dealerId; }
+      int getOrderId() const { return orderId; }
+      std::string getCommodity() const { return commodity; }
+      std::string getSide() const { return side; }
+
+
+    protected:
+      //Helper error message generator
+      std::string generateError(std::string part, std::string partVal){
+        return "Error validating " + part + " of: " + partVal + "\n" +
+          "Originated from command: \n\t" + command + "\n";
+
+      }
+      /**
+       * Validation methods to be used by derived classes
+       */
+
+      bool validateSide(std::string side){
+        bool ret = false;
+        for(int i = 0; i < NUM_SIDES; ++i){
+          if(side == VALID_SIDES[i]){ ret = true; }
         }
 
-        virtual bool validate() = 0;
+        return ret;
 
-                
+      }
+      bool validateCommodity(std::string commod){
+        bool ret = false;
 
-        //const getters
-        std::string getCommandType() const { return commandType; }
-        std::string getDealerId() const { return dealerId; }
-        int getOrderId() const { return orderId; }
-        std::string getCommodity() const { return commodity; }
-        std::string getSide() const { return side; }
-      protected:
-        bool validateSide(std::string side){
-          bool ret = false;
-          if(side == "BUY"){ ret = true; }
-          else if(side == "SELL"){ ret = true; }
-          return ret;
-
+        for(int i = 0; i < NUM_COMMODS; ++i){
+          if(commod == VALID_COMMODS[i]){ ret = true; }
         }
-        bool validateCommodity(std::string commod){
-          bool ret = false;
-          if(commod == "GOLD"){ ret = true; }
-          else if(commod == "SILV"){ ret = true; }
-          else if(commod == "PORK"){ ret = true; }
-          else if(commod == "OIL"){ ret = true; }
-          else if(commod == "RICE"){ ret = true; }
-          return ret;
 
+        return ret;
+      }
+
+      bool validateDealer(std::string dealer){
+        bool ret = false;
+
+        for(int i = 0; i < NUM_DEALERS; ++i){
+          if(dealer == VALID_DEALERS[i]){ ret = true; }
         }
-        
-        /*Data members*/
-        std::string command;
-        std::vector<std::string> * splitCommand;
-        std::string commandType; 
-        std::string dealerId;
-        int orderId;
-        std::string commodity;
-        std::string side;
-       
+
+        return ret;
+      }
+
+      bool validateCommand(std::string command){
+        bool ret = false;
+        for(int i = 0; i < NUM_COMMANDS; ++i){
+          if(command == VALID_COMMANDS[i]){ ret = true; }
+        }
+        return ret;
+      }
+
+      /*Data members*/
+      std::string command;
+      std::vector<std::string> * splitCommand;
+      std::string commandType; 
+      std::string dealerId;
+      int orderId;
+      std::string commodity;
+      std::string side;
 
 
-      private:
+
+    private:
 
 
 

@@ -19,17 +19,6 @@ using namespace std;
 void displayCmsMenu();
 string identifyCommandType(string cIn);
 
-void memoryTest(){
-  vector<Command *> comms;
-  for(int i = 0; i < 10000; ++i){
-    comms.push_back(new Post("Testing memory"));
-  }
-
-
-  for(int i = 0; i < 10000; ++i){
-    delete comms.at(i);
-  }
-}
 
 int main(int argc, char** argv){
   cout << "Welcome to the Commodity Market System! (CMS)" << endl;
@@ -48,6 +37,8 @@ int main(int argc, char** argv){
     //Identify the command type and create an instance of it
     type = identifyCommandType(line);
     if(type == "POST"){
+      post = new Post(line);
+      post->validate();
       m->addOrder(new Post(line));
     }else if(type == "LIST"){
       
@@ -63,7 +54,6 @@ int main(int argc, char** argv){
 
   }
 
-  delete m;
 }
 
 void displayCmsMenu(){
