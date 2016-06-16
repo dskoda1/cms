@@ -31,7 +31,6 @@ namespace cms {
       }
 
       ~Market(){
-
         //Loop through pairs in the map
         for(auto i = orders->begin(); i != orders->end(); ++i){
           //Loop through items in the vector in this pair
@@ -44,7 +43,6 @@ namespace cms {
         }
         //delete map
         delete orders;
-
       }
 
       /**
@@ -67,11 +65,7 @@ namespace cms {
 
         if(order->getListStatus() == 0){
           //Get all posts
-          for(auto i = orders->begin(); i != orders->end(); ++i){
-            for(auto j = i->second->begin(); j != i->second->end(); ++j){
-              ordersToPrint.push_back(*j);
-            }
-          }
+          ordersToPrint = getAllOrders();  
         }else if(order->getListStatus() == 1){
           //Get just posts from the commodity requested
           std::vector<Post *> * commodOrders = (*orders)[order->getCommodity()];
@@ -98,6 +92,32 @@ namespace cms {
         return ss.str();
       }
 
+      std::vector<Post *> getAllOrders(){
+        std::vector<Post *> ret;
+        for(auto i = orders->begin(); i != orders->end(); ++i){
+          for(auto j = i->second->begin(); j != i->second->end(); ++j){
+            ret.push_back(*j);
+          }
+        }
+        return ret;
+      } 
+      /**
+       * Ingestion of a revoke order
+       * Ensure the list exists first
+       * then erase it from memory
+       * if dealer ids match
+       */
+      std::string ingestOrder(Revoke * order){
+
+
+
+      }
+
+      /**
+       * User facing order get method
+       * also used internally
+       */
+
 
     private:
       std::string generateOrderInfo(Post * order, std::string optDelimit = ""){
@@ -112,7 +132,6 @@ namespace cms {
         return ss.str();
       }
 
-      //std::vector<Post *> * orders;
       std::map<std::string, std::vector<Post *> * > * orders;
       int orderNumber;
   };

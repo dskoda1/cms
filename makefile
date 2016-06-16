@@ -1,5 +1,5 @@
-CXX= clang++
-CXXFLAGS= -Wfatal-errors -std=c++1z -Wall -Wextra -pedantic -g 
+CXX= g++
+CXXFLAGS= -g -Wfatal-errors -std=c++1z -Wall -Wextra -pedantic
 
 
 all: Main

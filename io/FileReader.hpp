@@ -24,6 +24,10 @@ namespace cms {
 
       }
 
+      void sendLine(const std::string s){
+        std::cout << s << std::endl;
+      }
+
       FileReader(std::string nameIn): inFile{nameIn} 
       {
       }

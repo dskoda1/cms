@@ -27,7 +27,7 @@ namespace cms{
         //Validate commodity
         commodity = splitCommand->at(2);
         if(!validateCommodity(commodity)){
-          throw ParseException(generateError("commodity", commodity));
+          throw ParseException("INVALID_COMMODITY");
         }
         listStatus = 1;
       }
@@ -36,9 +36,13 @@ namespace cms{
         //validate dealer id
         dealerId = splitCommand->at(3);
         if(!validateDealer(dealerId)){
-          throw ParseException(generateError("UNKNOWN_DEALER", dealerId));
+          throw ParseException("INVALID_DEALER");
         }
         listStatus = 2;
+      }
+
+      if(splitCommand->size() > 4){
+        throw ParseException("UNKNOWN_MESSAGE");
       }
       return true;
     }      

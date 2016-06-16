@@ -23,7 +23,9 @@ namespace cms {
         std::cout << s;
       }
       
-
+      void sendLine(const std::string s){
+        std::cout << s << std::endl;
+      }
     private:
 
   };

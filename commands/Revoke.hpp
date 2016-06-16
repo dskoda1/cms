@@ -11,9 +11,19 @@ namespace cms {
 
       virtual ~Revoke(){}
 
+      /**
+       * {dealerId} REVOKE {orderId}
+       */
       virtual bool validate(){
+        if(splitCommand->size() != 3){
+          throw ParseException("UNKNOWN_MESSAGE");
+        }
+        //Defer lookup of order for validation that the
+        //same dealer is the one requesting a delete to
+        //the market. We dont want HSBC revoking an order
+        //from CITI, for example.
 
-        return false;
+        return true;
       }
 
     private:

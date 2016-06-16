@@ -29,6 +29,11 @@ namespace cms{
        */
       virtual void sendMessage(const std::string) = 0;
 
+      /**
+       * Send a message with a newline
+       */
+      virtual void sendLine(const std::string) = 0;
+
       virtual ~ioI(){}
     private:
 

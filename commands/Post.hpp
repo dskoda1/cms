@@ -28,17 +28,17 @@ namespace cms {
       bool validate(){
         //Ensure length first
         if(splitCommand->size() != 6){
-          throw ParseException("INVALID MESSAGE\n");
+          throw ParseException("INVALID MESSAGE");
         }
 
         side = splitCommand->at(2);
         if(!validateSide(side)){
-          throw ParseException(generateError("side", side));
+          throw ParseException("INVALID_SIDE");
         }
         
         commodity = splitCommand->at(3);
         if(!validateCommodity(commodity)){
-          throw ParseException(generateError("commodity", commodity));
+          throw ParseException("INVALID_COMMODITY");
         }
 
         amount = atoi(splitCommand->at(4).c_str());

@@ -19,25 +19,17 @@ using namespace cms;
 using namespace std;
 
 //Function stubs
-void displayCmsMenu();
 string identifyCommandType(string &cIn);
-
+ioI * parseArgs(int argc, char** argv);
 
 int main(int argc, char** argv){
 
   //Initialize the communication layer of choice
-  ioI * commLayer;
-  bool test = false;
-  if(argc == 0){
-    commLayer = new cli();
-  }else{
-    test = true;
-    commLayer = new FileReader("test/testPost.txt");
-  }
+  ioI * commLayer = parseArgs(argc, argv);
 
-  commLayer->sendMessage("Welcome to the Commodity Market System! (CMS)\n");
-  commLayer->sendMessage("Ctrl + c, or simply \"e\" to exit.\n");
-  commLayer->sendMessage("Please begin issuing commands.\n");
+  commLayer->sendLine("Welcome to the Commodity Market System! (CMS)");
+  commLayer->sendLine("Ctrl + c, or simply \"e\" to exit.");
+  commLayer->sendLine("Please begin issuing commands.");
   string line = "", type = "", output = "";
 
   //And the market
@@ -46,14 +38,11 @@ int main(int argc, char** argv){
 
   //Loop to receive commands in
   while((line = commLayer->getMessage()) != "e"){
-    if(test){
-      commLayer->sendMessage(line + "\n");
-    }
     Command * command;
 
     //Identify the command type and create an instance of it
     type = identifyCommandType(line);
-
+    output = "";
     try{
       if(type == "POST"){
         command = new Post(line);
@@ -70,24 +59,20 @@ int main(int argc, char** argv){
       }else if(type == "other commands here"){
 
       }else{
-        commLayer->sendMessage("\t\nINVALID MESSAGE\n\n");
+        commLayer->sendLine("INVALID_MESSAGE");
 
       }
+      commLayer->sendLine(output);
     }catch(const ParseException& pe){
-
-      commLayer->sendMessage(pe.what());
+      commLayer->sendLine(line);
+      commLayer->sendLine(pe.what());
     }
-
-    commLayer->sendMessage("\n");    
   }
   //cleanup
   delete commLayer;
   delete m;
 }
 
-void displayCmsMenu(){
-
-}
 
 string identifyCommandType(string & cIn){
   //Grab the second string in the arg
@@ -96,5 +81,17 @@ string identifyCommandType(string & cIn){
   ss >> temp;
   ss >> temp;
   return temp;
+}
+
+ioI * parseArgs(int argc, char** argv){
+
+  ioI * ret;
+  if(argc == 2){
+    ret = new FileReader(argv[1]);
+  }else{
+    ret = new cli();
+  }
+
+  return ret;
 }
 
