@@ -10,6 +10,7 @@
 #include "commands/Command.hpp"
 #include "commands/Post.hpp"
 #include "commands/List.hpp"
+#include "commands/Revoke.hpp"
 
 #include "market/Market.hpp"
 
@@ -26,16 +27,18 @@ int main(int argc, char** argv){
 
   //Initialize the communication layer of choice
   ioI * commLayer;
+  bool test = false;
   if(argc == 0){
     commLayer = new cli();
   }else{
+    test = true;
     commLayer = new FileReader("test/testPost.txt");
   }
 
   commLayer->sendMessage("Welcome to the Commodity Market System! (CMS)\n");
   commLayer->sendMessage("Ctrl + c, or simply \"e\" to exit.\n");
   commLayer->sendMessage("Please begin issuing commands.\n");
-  string line = "", type = "";
+  string line = "", type = "", output = "";
 
   //And the market
   Market * m = new Market();
@@ -43,20 +46,26 @@ int main(int argc, char** argv){
 
   //Loop to receive commands in
   while((line = commLayer->getMessage()) != "e"){
-    commLayer->sendMessage(line + "\n");
+    if(test){
+      commLayer->sendMessage(line + "\n");
+    }
     Command * command;
 
     //Identify the command type and create an instance of it
     type = identifyCommandType(line);
+
     try{
       if(type == "POST"){
         command = new Post(line);
         command->validate();
-        commLayer->sendMessage(m->ingestOrder(dynamic_cast<Post *>(command)));
+        output = m->ingestOrder(dynamic_cast<Post *>(command));
       }else if(type == "LIST"){
         command = new List(line);
         command->validate();
-        commLayer->sendMessage(m->ingestOrder(dynamic_cast<List *>(command)));       
+        output = m->ingestOrder(dynamic_cast<List *>(command));
+      }else if(type == "AGRESS"){
+
+      }else if(type == "REVOKE"){
 
       }else if(type == "other commands here"){
 

@@ -107,7 +107,8 @@ namespace cms {
         ss << order->getSide() << " ";
         ss << order->getCommodity() << " ";
         ss << order->getAmount() << " ";
-        ss << order->getPrice() << optDelimit;
+        ss << order->getPrice(); 
+        ss << optDelimit;
         return ss.str();
       }
 

@@ -87,6 +87,10 @@ namespace cms{
 
     protected:
       //Helper error message generator
+      std::string generateError(const std::string & part){
+        return "INVALID_" + part;
+      }
+
       std::string generateError(std::string part, std::string partVal){
         std::string ret = "\n\tERROR THROWN PARSING COMMAND\n";
         ret += "\tError validating " + part + " of: " + partVal + "\n";
