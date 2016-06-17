@@ -70,6 +70,8 @@ int main(int argc, char** argv){
     }catch(const MarketException& me){
       commLayer->sendLine(line);
       commLayer->sendLine(me.what());
+      cout << *m << endl;
+
     }
   }
   //cleanup

@@ -18,8 +18,6 @@
 #include <sstream>
 namespace cms {
 
-
-
   class Market {
 
     public:
@@ -82,23 +80,14 @@ namespace cms {
        * 3. Erase the order
        */
       std::string ingestOrder(Revoke * order){
-        /*
-        Post * postRequested = getOrderById(order->getOrderId());
-        
-        if(postRequested->getDealerId() != order->getDealerId()){
-          throw MarketException("UNAUTHORIZED inside ingest order");
+
+        Post * postReq = db->getOrder(order->getOrderId());
+        std::cout << "Found post with order of " << postReq->getOrderId() << std::endl;
+        //Ensure authorization now
+
+
+        return "";
         }
-    
-        //Call the delete method
-        deleteOrder(order->getOrderId());
-        */
-        
-        std::stringstream ss;
-        ss << order->getOrderId();
-        ss << " HAS BEEN REVOKED";
-        throw MarketException("Unimplemted Exception"); 
-        return ss.str(); 
-      }
 
       /**
        * Delete an order by id
@@ -121,6 +110,11 @@ namespace cms {
       }
        */
 
+      friend std::ostream& operator <<(std::ostream & os, const Market& m){
+
+        os << *(m.db) << std::endl;
+        return os;
+      }
     private:
       std::string generateOrderInfo(Post * order, std::string optDelimit = ""){
         std::stringstream ss;

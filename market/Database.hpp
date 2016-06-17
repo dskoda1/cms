@@ -71,7 +71,25 @@ namespace cms {
         }
         
         
-        Post * getOrder(int orderId);
+        Post * getOrder(int orderId){
+          Post * ret;
+          bool found = false;
+          std::map<int, Post *>::iterator iter;
+          for(auto i = orders->begin(); i != orders->end(); ++i){
+            if((iter = i->second->find(orderId))  != i->second->end()){
+              ret = iter->second;
+              found = true;
+              break;
+            }
+          }
+
+          if(!found){
+            throw MarketException("UNKNOWN_ORDER");
+          }
+
+          return ret;
+
+        }
 
         //Delete
         void deleteOrder(int orderId);
@@ -79,6 +97,19 @@ namespace cms {
         //Update
         void updateOrder(Post * newOrder);
 
+
+        friend std::ostream& operator <<(std::ostream & os, const Database& db){
+          os << "Database dump" << std::endl;
+          for(auto i = db.orders->begin(); i != db.orders->end(); ++i){
+            os << i->first << std::endl;
+            for(auto j = i->second->begin(); j != i->second->end(); ++j){
+              os << "Order num: " << j->first;
+              os << "\tDealer: " << j->second->getDealerId() << std::endl; 
+            }
+          }
+
+          return os;
+        }
       private:
         std::map<std::string, std::map<int, Post *> * > * orders;
         void initOrders(){
