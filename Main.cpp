@@ -60,6 +60,8 @@ int main(int argc, char** argv){
         command = new Revoke(line);
         command->validate();
         output = m->ingestOrder(dynamic_cast<Revoke *>(command));
+        delete command;
+
       }else if(type == "other commands here"){
 
       }else{
