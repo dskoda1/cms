@@ -53,6 +53,7 @@ int main(int argc, char** argv){
         command = new List(line);
         command->validate();
         output = m->ingestOrder(dynamic_cast<List *>(command));
+        delete command;
       }else if(type == "AGRESS"){
 
       }else if(type == "REVOKE"){

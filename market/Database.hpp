@@ -39,7 +39,6 @@ namespace cms {
         void saveOrder(Post * order){
           (*orders)[order->getCommodity()]->insert(std::pair<int, Post*>(
                 order->getOrderId(), order));
-          std::cout << "Saving order of id: " << order->getOrderId() << std::endl;
         }
 
         //Read
@@ -48,13 +47,30 @@ namespace cms {
           for(auto i = orders->begin(); i != orders->end(); ++i){
             for(auto j = i->second->begin(); j != i->second->end(); ++j){
               ret.push_back(j->second);
-              std::cout << "Getting order of id: " << j->second->getOrderId() << std::endl;
             }
           }
           return ret;
         }
-        std::vector<Post *> getOrders(std::string commodity);
-        std::vector<Post *> getOrders(std::string commodity, std::string dealerId);
+        std::vector<Post *> getOrders(std::string commodity){
+          std::vector<Post *> ret;
+          auto commodMap = (*orders)[commodity];
+          for(auto i = commodMap->begin(); i != commodMap->end(); ++i){
+            ret.push_back(i->second);
+          }           
+          return ret;
+        }
+        std::vector<Post *> getOrders(std::string commodity, std::string dealerId){
+          std::vector<Post *> ret;
+          auto commodMap = (*orders)[commodity];
+          for(auto i = commodMap->begin(); i != commodMap->end(); ++i){
+            if(i->second->getDealerId() == dealerId){
+              ret.push_back(i->second);
+            }
+          } 
+          return ret;
+        }
+        
+        
         Post * getOrder(int orderId);
 
         //Delete
