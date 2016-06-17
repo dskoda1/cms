@@ -2,21 +2,18 @@
 #define PARSE_EXCEPTION_HPP
 
 
-
+#include "MarketException.hpp"
 
 namespace cms {
 
-  class ParseException : public std::exception {
-
-    private:
-      std::string message;
+  class ParseException : public MarketException {
 
     public:
-      explicit ParseException(const std::string& messageIn): message{messageIn}
-      {}
+      explicit ParseException(const std::string& mIn) : MarketException{mIn} {} 
+     
 
       virtual const char * what() const throw(){
-        return message.c_str();
+        return m.c_str();
       }
   }; 
 

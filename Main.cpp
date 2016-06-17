@@ -14,6 +14,7 @@
 
 #include "market/Market.hpp"
 
+#include "util/MarketException.hpp"
 //Namespaces
 using namespace cms;
 using namespace std;
@@ -55,7 +56,9 @@ int main(int argc, char** argv){
       }else if(type == "AGRESS"){
 
       }else if(type == "REVOKE"){
-
+        command = new Revoke(line);
+        command->validate();
+        output = m->ingestOrder(dynamic_cast<Revoke *>(command));
       }else if(type == "other commands here"){
 
       }else{
@@ -63,9 +66,9 @@ int main(int argc, char** argv){
 
       }
       commLayer->sendLine(output);
-    }catch(const ParseException& pe){
+    }catch(const MarketException& me){
       commLayer->sendLine(line);
-      commLayer->sendLine(pe.what());
+      commLayer->sendLine(me.what());
     }
   }
   //cleanup
