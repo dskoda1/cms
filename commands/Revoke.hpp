@@ -23,6 +23,8 @@ namespace cms {
         //the market. We dont want HSBC revoking an order
         //from CITI, for example.
 
+
+        orderId = stoi(splitCommand->at(2));
         return true;
       }
 

@@ -82,12 +82,20 @@ namespace cms {
       std::string ingestOrder(Revoke * order){
 
         Post * postReq = db->getOrder(order->getOrderId());
-        std::cout << "Found post with order of " << postReq->getOrderId() << std::endl;
+        
         //Ensure authorization now
+        if(order->getDealerId() != postReq->getDealerId()){
+          throw MarketException("UNAUTHORIZED");
+        } 
 
+        //Got to this point, remove the order
+        db->deleteOrder(order->getOrderId());
 
-        return "";
-        }
+        std::stringstream ss;
+        ss << order->getOrderId();
+        ss << " HAS BEEN REVOKED";
+        return ss.str();  
+      }
 
       /**
        * Delete an order by id
