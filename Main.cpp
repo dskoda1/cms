@@ -47,18 +47,18 @@ int main(int argc, char** argv){
     try{
       if(type == "POST"){
         command = new Post(line);
-        command->validate();
+        //command->validate();
         output = m->ingestOrder(dynamic_cast<Post *>(command));
       }else if(type == "LIST"){
         command = new List(line);
-        command->validate();
+        //command->validate();
         output = m->ingestOrder(dynamic_cast<List *>(command));
         delete command;
       }else if(type == "AGRESS"){
 
       }else if(type == "REVOKE"){
         command = new Revoke(line);
-        command->validate();
+        //command->validate();
         output = m->ingestOrder(dynamic_cast<Revoke *>(command));
         delete command;
 
@@ -73,7 +73,7 @@ int main(int argc, char** argv){
       commLayer->sendLine(line);
       commLayer->sendLine(me.what());
       cout << *m << endl;
-
+      delete command;
     }
   }
   //cleanup

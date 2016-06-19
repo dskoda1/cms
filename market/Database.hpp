@@ -35,6 +35,7 @@ namespace cms {
         //delete the outer map
         delete orders;
 
+        delete idBuckets;
       }
       //Create
       void saveOrder(Post * order){

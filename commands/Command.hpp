@@ -41,6 +41,7 @@ namespace cms{
     public:
       Command(std::string cIn) : command{cIn} {
         parseCommand();
+        validate();
       }
       virtual ~Command(){
         delete splitCommand;
